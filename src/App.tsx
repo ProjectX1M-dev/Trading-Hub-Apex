@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import Sidebar from './components/Sidebar';
+import TopNavBar from './components/TopNavBar';
+import TourModal from './components/TourModal';
 import ToastContainer from './components/ToastContainer';
 import AccountsPage from './components/AccountsPage';
 import CopyTradingPage from './components/CopyTradingPage';
@@ -16,6 +18,7 @@ import SocialCard from './components/SocialCard';
 import EarningsCard from './components/EarningsCard';
 import DataTable from './components/DataTable';
 import { useToast } from './hooks/useToast';
+import { useTour } from './hooks/useTour';
 import { 
   Users, 
   Link, 
@@ -34,10 +37,39 @@ function App() {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { toasts, toast, removeToast } = useToast();
+  const { 
+    isActive: isTourActive, 
+    currentStep, 
+    totalSteps, 
+    currentStepData, 
+    startTour, 
+    nextStep, 
+    previousStep, 
+    skipTour, 
+    closeTour 
+  } = useTour();
 
   const handleLogin = () => {
     setIsLoggedIn(true);
     toast.success('Welcome back!', 'Successfully logged into Trading Hub');
+  };
+
+  const handleStartTour = () => {
+    startTour();
+    toast.info('Tour Started', 'Welcome to Trading Hub! Let\'s explore the features together.');
+  };
+
+  const handleTourNext = () => {
+    const targetPage = currentStepData.target;
+    if (targetPage && targetPage !== activeItem) {
+      setActiveItem(targetPage);
+    }
+    nextStep();
+  };
+
+  const handleTourSkip = () => {
+    skipTour();
+    toast.info('Tour Skipped', 'You can restart the tour anytime from the top navigation.');
   };
 
   if (!isLoggedIn) {
@@ -263,11 +295,29 @@ function App() {
         setIsCollapsed={setSidebarCollapsed}
       />
       
-      <div className={`flex-1 overflow-auto transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'ml-0' : 'ml-0'}`}>
-        {renderContent()}
+      <div className="flex-1 flex flex-col">
+        <TopNavBar 
+          sidebarCollapsed={sidebarCollapsed}
+          setSidebarCollapsed={setSidebarCollapsed}
+          onStartTour={handleStartTour}
+        />
+        <div className="flex-1 overflow-auto">
+          {renderContent()}
+        </div>
       </div>
       
       <ToastContainer toasts={toasts} onClose={removeToast} />
+      
+      <TourModal
+        isOpen={isTourActive}
+        currentStep={currentStep}
+        totalSteps={totalSteps}
+        step={currentStepData}
+        onNext={handleTourNext}
+        onPrevious={previousStep}
+        onSkip={handleTourSkip}
+        onClose={closeTour}
+      />
     </div>
   );
 }

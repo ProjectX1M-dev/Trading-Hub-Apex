@@ -38,32 +38,22 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem, isCollapse
   ];
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-gray-900 h-screen flex flex-col transition-all duration-300 ease-in-out relative`}>
-      {/* Toggle Button */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute -right-3 top-6 w-6 h-6 bg-gray-800 border border-gray-700 rounded-full flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-700 transition-colors z-10"
-      >
-        {isCollapsed ? <Menu className="w-3 h-3" /> : <X className="w-3 h-3" />}
-      </button>
-
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-gray-900 h-screen flex flex-col transition-all duration-300 ease-in-out relative border-r border-gray-700`}>
       <div className="p-6">
-        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'}`}>
+        <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'space-x-2'} mt-2`}>
           {isCollapsed ? (
             <div className="w-8 h-8 bg-green-600 rounded flex items-center justify-center">
               <span className="text-white font-bold text-sm">T</span>
             </div>
           ) : (
-            <img 
-              src="/tradinghub_dark_logo.png" 
-              alt="Trading Hub" 
-              className="h-8"
-            />
+            <div className="w-8 h-8 bg-green-600 rounded flex items-center justify-center">
+              <span className="text-white font-bold text-sm">T</span>
+            </div>
           )}
         </div>
         {!isCollapsed && (
           <div className="mt-4 text-sm text-gray-400">
-            User: [v1.1.24.1]
+            Account Management
           </div>
         )}
       </div>
