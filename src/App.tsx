@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import AccountsPage from './components/AccountsPage';
 import CopyTradingPage from './components/CopyTradingPage';
+import TradingViewPage from './components/TradingViewPage';
+import OrderHistoryPage from './components/OrderHistoryPage';
 import StatsCard from './components/StatsCard';
 import ReferralBanner from './components/ReferralBanner';
 import SocialCard from './components/SocialCard';
@@ -29,6 +31,10 @@ function App() {
         return <AccountsPage />;
       case 'copy-trading':
         return <CopyTradingPage />;
+      case 'trading-view':
+        return <TradingViewPage />;
+      case 'order-history':
+        return <OrderHistoryPage />;
       default:
         return renderDashboard();
     }
