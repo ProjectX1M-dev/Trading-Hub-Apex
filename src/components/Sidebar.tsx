@@ -37,10 +37,11 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) => {
     <div className="w-64 bg-gray-900 h-screen flex flex-col">
       <div className="p-6">
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-green-500 rounded flex items-center justify-center">
-            <TrendingUp className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-white text-xl font-bold">AlgoDeltaFX</span>
+          <img 
+            src="/tradinghub_dark_logo.png" 
+            alt="Trading Hub" 
+            className="h-8"
+          />
         </div>
         <div className="mt-4 text-sm text-gray-400">
           User: [v1.1.24.1]

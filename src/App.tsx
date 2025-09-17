@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import LoginPage from './components/LoginPage';
 import Sidebar from './components/Sidebar';
 import AccountsPage from './components/AccountsPage';
 import CopyTradingPage from './components/CopyTradingPage';
@@ -6,6 +7,8 @@ import TradingViewPage from './components/TradingViewPage';
 import OrderHistoryPage from './components/OrderHistoryPage';
 import WalletPage from './components/WalletPage';
 import ReferralPage from './components/ReferralPage';
+import ActivityLogsPage from './components/ActivityLogsPage';
+import ProfilePage from './components/ProfilePage';
 import StatsCard from './components/StatsCard';
 import ReferralBanner from './components/ReferralBanner';
 import SocialCard from './components/SocialCard';
@@ -25,7 +28,16 @@ import {
 } from 'lucide-react';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  if (!isLoggedIn) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
 
   const renderContent = () => {
     switch (activeItem) {
@@ -41,6 +53,10 @@ function App() {
         return <WalletPage />;
       case 'referral':
         return <ReferralPage />;
+      case 'activity-logs':
+        return <ActivityLogsPage />;
+      case 'profile':
+        return <ProfilePage />;
       default:
         return renderDashboard();
     }
