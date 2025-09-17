@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, RefreshCw, X, Eye, EyeOff } from 'lucide-react';
 
-const AccountsPage: React.FC = () => {
+interface AccountsPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const AccountsPage: React.FC<AccountsPageProps> = ({ toast }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [autoRenew, setAutoRenew] = useState(true);
@@ -22,9 +31,21 @@ const AccountsPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    
+    if (!formData.mt5Id || !formData.password || !formData.serverName) {
+      toast.error('Missing Information', 'Please fill in all required fields');
+      return;
+    }
+    
+    toast.success('Account Added Successfully!', `MT5 account ${formData.mt5Id} has been connected`);
     setShowAddModal(false);
+    setFormData({
+      mt5Id: '',
+      password: '',
+      serverName: '',
+      nickName: '',
+      duration: ''
+    });
   };
 
   const handleCancel = () => {

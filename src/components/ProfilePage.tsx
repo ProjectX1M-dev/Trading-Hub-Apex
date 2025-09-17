@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { Upload, Edit, ChevronDown } from 'lucide-react';
 
-const ProfilePage: React.FC = () => {
+interface ProfilePageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const ProfilePage: React.FC<ProfilePageProps> = ({ toast }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     fullName: '',
@@ -45,12 +54,17 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleSave = () => {
-    // Handle save logic here
+    if (!profileData.fullName.trim()) {
+      toast.error('Missing Information', 'Please enter your full name');
+      return;
+    }
+    
+    toast.success('Profile Updated Successfully!', 'Your profile information has been saved');
     setIsEditing(false);
   };
 
   const handleCancel = () => {
-    // Reset form or handle cancel logic
+    toast.info('Changes Cancelled', 'Your profile changes have been discarded');
     setIsEditing(false);
   };
 

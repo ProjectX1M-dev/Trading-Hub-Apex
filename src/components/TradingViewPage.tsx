@@ -22,7 +22,16 @@ interface Connector {
   accountGroup?: string;
 }
 
-const TradingViewPage: React.FC = () => {
+interface TradingViewPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const TradingViewPage: React.FC<TradingViewPageProps> = ({ toast }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSyntaxGenerator, setShowSyntaxGenerator] = useState(false);
   const [selectedConnector, setSelectedConnector] = useState<Connector | null>(null);
@@ -53,7 +62,10 @@ const TradingViewPage: React.FC = () => {
 
   const handleCreateConnector = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!connectorName.trim()) return;
+    if (!connectorName.trim()) {
+      toast.error('Missing Information', 'Please enter a connector name');
+      return;
+    }
 
     const newConnector: Connector = {
       id: Date.now().toString(),
@@ -65,32 +77,40 @@ const TradingViewPage: React.FC = () => {
     setConnectors([...connectors, newConnector]);
     setConnectorName('');
     setShowCreateModal(false);
-    
-    // Show success message
-    setSuccessMessage(`Bridge ${connectorName} Created Successfully !`);
-    setShowSuccessMessage(true);
-    setTimeout(() => setShowSuccessMessage(false), 3000);
+    toast.success('Connector Created Successfully!', `TradingView connector "${connectorName}" has been created`);
   };
 
   const handleGenerateSyntax = (connector: Connector) => {
     setSelectedConnector(connector);
     setShowSyntaxGenerator(true);
+    toast.info('Syntax Generator Opened', 'Configure your trading parameters to generate the webhook syntax');
   };
 
   const toggleTrading = (connectorId: string) => {
+    const connector = connectors.find(c => c.id === connectorId);
+    const newStatus = !connector?.trading;
+    
     setConnectors(connectors.map(conn => 
       conn.id === connectorId 
         ? { ...conn, trading: !conn.trading }
         : conn
     ));
+    
+    toast.info(
+      `Trading ${newStatus ? 'Enabled' : 'Disabled'}`, 
+      `Trading has been ${newStatus ? 'enabled' : 'disabled'} for ${connector?.name}`
+    );
   };
 
   const deleteConnector = (connectorId: string) => {
+    const connector = connectors.find(c => c.id === connectorId);
     setConnectors(connectors.filter(conn => conn.id !== connectorId));
+    toast.success('Connector Deleted', `${connector?.name} has been removed successfully`);
   };
 
   const copyCode = () => {
     navigator.clipboard.writeText(generatedCode);
+    toast.success('Code Copied!', 'The webhook syntax has been copied to your clipboard');
   };
 
   return (

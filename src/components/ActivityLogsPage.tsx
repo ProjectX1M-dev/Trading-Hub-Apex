@@ -14,12 +14,29 @@ interface ActivityLog {
   createTime: string;
 }
 
-const ActivityLogsPage: React.FC = () => {
+interface ActivityLogsPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const ActivityLogsPage: React.FC<ActivityLogsPageProps> = ({ toast }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchDescription, setSearchDescription] = useState('');
   const [searchNote, setSearchNote] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
+
+  const handleExport = () => {
+    toast.success('Export Started', 'Your activity logs are being prepared for download');
+  };
+
+  const handleDateSelect = () => {
+    toast.info('Date Filter', 'Select a date to filter your activity logs');
+  };
 
   const [activityLogs] = useState<ActivityLog[]>([
     {
@@ -105,13 +122,19 @@ const ActivityLogsPage: React.FC = () => {
 
       {/* Export and View Controls */}
       <div className="flex items-center justify-between mb-4">
-        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2">
+        <button 
+          onClick={handleExport}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2"
+        >
           <Download className="w-4 h-4" />
           <span>Export</span>
         </button>
         
         <div className="flex items-center space-x-4">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+          <button 
+            onClick={handleDateSelect}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm"
+          >
             Select Date
           </button>
           <div className="flex items-center space-x-2">

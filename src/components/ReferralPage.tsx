@@ -13,9 +13,32 @@ import {
   TrendingUp
 } from 'lucide-react';
 
-const ReferralPage: React.FC = () => {
+interface ReferralPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const ReferralPage: React.FC<ReferralPageProps> = ({ toast }) => {
   const [activeTab, setActiveTab] = useState('all-referral-users');
   const [searchTerm, setSearchTerm] = useState('');
+
+  const handleReferralLinkClick = () => {
+    const referralLink = 'https://tradinghub.com/ref/user123';
+    navigator.clipboard.writeText(referralLink);
+    toast.success('Referral Link Copied!', 'Share this link to earn rewards from referrals');
+  };
+
+  const handleCreditClick = () => {
+    toast.info('Credit Pending Amount', 'Your pending referral earnings will be credited to your wallet');
+  };
+
+  const handleWithdrawClick = () => {
+    toast.warning('Minimum Withdrawal Required', 'You need at least $10 to make a withdrawal');
+  };
 
   const stats = [
     {
@@ -133,10 +156,16 @@ const ReferralPage: React.FC = () => {
             </div>
           </div>
           <div className="flex space-x-3">
-            <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+            <button 
+              onClick={handleCreditClick}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
               Credit
             </button>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">
+            <button 
+              onClick={handleWithdrawClick}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
               Withdraw
             </button>
           </div>
@@ -147,7 +176,10 @@ const ReferralPage: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-white font-semibold mb-2">Invite your friends, earn rewards with every referral! 🎯</h3>
-              <button className="bg-green-400 hover:bg-green-300 text-green-900 px-4 py-2 rounded-lg font-medium transition-colors">
+              <button 
+                onClick={handleReferralLinkClick}
+                className="bg-green-400 hover:bg-green-300 text-green-900 px-4 py-2 rounded-lg font-medium transition-colors"
+              >
                 Referral Link
               </button>
             </div>

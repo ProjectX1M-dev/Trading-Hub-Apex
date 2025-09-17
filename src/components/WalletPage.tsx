@@ -19,7 +19,16 @@ interface Transaction {
   createTime: string;
 }
 
-const WalletPage: React.FC = () => {
+interface WalletPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const WalletPage: React.FC<WalletPageProps> = ({ toast }) => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedTransactionType, setSelectedTransactionType] = useState('OTHER');
   const [amount, setAmount] = useState('');
@@ -56,7 +65,15 @@ const WalletPage: React.FC = () => {
 
   const handleAddAmount = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!amount || !description) return;
+    if (!amount || !description) {
+      toast.error('Missing Information', 'Please enter both amount and description');
+      return;
+    }
+
+    if (parseFloat(amount) <= 0) {
+      toast.error('Invalid Amount', 'Amount must be greater than 0');
+      return;
+    }
 
     const newTransaction: Transaction = {
       id: transactions.length + 1,
@@ -67,6 +84,7 @@ const WalletPage: React.FC = () => {
     };
 
     setTransactions([newTransaction, ...transactions]);
+    toast.success('Amount Added Successfully!', `$${amount} has been added to your wallet`);
     setAmount('');
     setDescription('');
     setShowAddModal(false);

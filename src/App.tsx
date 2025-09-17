@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginPage from './components/LoginPage';
 import Sidebar from './components/Sidebar';
+import ToastContainer from './components/ToastContainer';
 import AccountsPage from './components/AccountsPage';
 import CopyTradingPage from './components/CopyTradingPage';
 import TradingViewPage from './components/TradingViewPage';
@@ -14,6 +15,7 @@ import ReferralBanner from './components/ReferralBanner';
 import SocialCard from './components/SocialCard';
 import EarningsCard from './components/EarningsCard';
 import DataTable from './components/DataTable';
+import { useToast } from './hooks/useToast';
 import { 
   Users, 
   Link, 
@@ -30,9 +32,12 @@ import {
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeItem, setActiveItem] = useState('dashboard');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { toasts, toast, removeToast } = useToast();
 
   const handleLogin = () => {
     setIsLoggedIn(true);
+    toast.success('Welcome back!', 'Successfully logged into Trading Hub');
   };
 
   if (!isLoggedIn) {
@@ -42,21 +47,21 @@ function App() {
   const renderContent = () => {
     switch (activeItem) {
       case 'accounts':
-        return <AccountsPage />;
+        return <AccountsPage toast={toast} />;
       case 'copy-trading':
-        return <CopyTradingPage />;
+        return <CopyTradingPage toast={toast} />;
       case 'trading-view':
-        return <TradingViewPage />;
+        return <TradingViewPage toast={toast} />;
       case 'order-history':
-        return <OrderHistoryPage />;
+        return <OrderHistoryPage toast={toast} />;
       case 'wallet':
-        return <WalletPage />;
+        return <WalletPage toast={toast} />;
       case 'referral':
-        return <ReferralPage />;
+        return <ReferralPage toast={toast} />;
       case 'activity-logs':
-        return <ActivityLogsPage />;
+        return <ActivityLogsPage toast={toast} />;
       case 'profile':
-        return <ProfilePage />;
+        return <ProfilePage toast={toast} />;
       default:
         return renderDashboard();
     }
@@ -251,11 +256,18 @@ function App() {
 
   return (
     <div className="flex h-screen bg-gray-900">
-      <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} />
+      <Sidebar 
+        activeItem={activeItem} 
+        setActiveItem={setActiveItem}
+        isCollapsed={sidebarCollapsed}
+        setIsCollapsed={setSidebarCollapsed}
+      />
       
-      <div className="flex-1 overflow-auto">
+      <div className={`flex-1 overflow-auto transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'ml-0' : 'ml-0'}`}>
         {renderContent()}
       </div>
+      
+      <ToastContainer toasts={toasts} onClose={removeToast} />
     </div>
   );
 }

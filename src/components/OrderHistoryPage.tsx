@@ -1,10 +1,27 @@
 import React, { useState } from 'react';
 import { Search, Filter, RefreshCw, Download, Calendar, ChevronDown } from 'lucide-react';
 
-const OrderHistoryPage: React.FC = () => {
+interface OrderHistoryPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const OrderHistoryPage: React.FC<OrderHistoryPageProps> = ({ toast }) => {
   const [activeTab, setActiveTab] = useState('group-orders');
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleExport = () => {
+    toast.success('Export Started', 'Your order history is being prepared for download');
+  };
+
+  const handleDateSelect = () => {
+    toast.info('Date Filter', 'Select a date range to filter your order history');
+  };
 
   const groupOrderColumns = [
     { key: 'id', label: 'Id', searchable: false },
@@ -86,10 +103,16 @@ const OrderHistoryPage: React.FC = () => {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-white text-2xl font-semibold">Order History</h1>
         <div className="flex items-center space-x-4">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm">
+          <button 
+            onClick={handleDateSelect}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm"
+          >
             Select Date
           </button>
-          <button className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm">
+          <button 
+            onClick={handleExport}
+            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm"
+          >
             Export
           </button>
         </div>
@@ -121,7 +144,10 @@ const OrderHistoryPage: React.FC = () => {
 
       {/* Export Button */}
       <div className="flex justify-end mb-4">
-        <button className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2">
+        <button 
+          onClick={handleExport}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm flex items-center space-x-2"
+        >
           <Download className="w-4 h-4" />
           <span>Export</span>
         </button>

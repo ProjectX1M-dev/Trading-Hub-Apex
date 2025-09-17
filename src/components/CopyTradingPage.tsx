@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { Plus, Search, Filter, RefreshCw, X, Info, Users, Link, UserX, ShoppingCart } from 'lucide-react';
 
-const CopyTradingPage: React.FC = () => {
+interface CopyTradingPageProps {
+  toast: {
+    success: (title: string, message?: string) => void;
+    error: (title: string, message?: string) => void;
+    warning: (title: string, message?: string) => void;
+    info: (title: string, message?: string) => void;
+  };
+}
+
+const CopyTradingPage: React.FC<CopyTradingPageProps> = ({ toast }) => {
   const [showCreateGroupModal, setShowCreateGroupModal] = useState(false);
   const [showAddChildModal, setShowAddChildModal] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -22,14 +31,34 @@ const CopyTradingPage: React.FC = () => {
 
   const handleCreateGroup = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Create group:', formData);
+    if (!formData.groupName.trim()) {
+      toast.error('Missing Information', 'Please enter a group name');
+      return;
+    }
+    
+    toast.success('Group Created Successfully!', `Copy trading group "${formData.groupName}" has been created`);
     setShowCreateGroupModal(false);
+    setFormData({
+      groupName: '',
+      childAccount: '',
+      multiplier: '1'
+    });
   };
 
   const handleAddChild = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Add child:', formData);
+    if (!formData.childAccount) {
+      toast.error('Missing Information', 'Please select a child account');
+      return;
+    }
+    
+    toast.success('Child Account Added!', 'Account has been successfully added to the copy trading group');
     setShowAddChildModal(false);
+    setFormData({
+      groupName: '',
+      childAccount: '',
+      multiplier: '1'
+    });
   };
 
   const handleCancel = () => {
