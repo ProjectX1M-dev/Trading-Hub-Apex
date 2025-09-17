@@ -4,6 +4,8 @@ import AccountsPage from './components/AccountsPage';
 import CopyTradingPage from './components/CopyTradingPage';
 import TradingViewPage from './components/TradingViewPage';
 import OrderHistoryPage from './components/OrderHistoryPage';
+import WalletPage from './components/WalletPage';
+import ReferralPage from './components/ReferralPage';
 import StatsCard from './components/StatsCard';
 import ReferralBanner from './components/ReferralBanner';
 import SocialCard from './components/SocialCard';
@@ -35,6 +37,10 @@ function App() {
         return <TradingViewPage />;
       case 'order-history':
         return <OrderHistoryPage />;
+      case 'wallet':
+        return <WalletPage />;
+      case 'referral':
+        return <ReferralPage />;
       default:
         return renderDashboard();
     }

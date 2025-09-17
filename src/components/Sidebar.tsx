@@ -20,6 +20,9 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  ];
+
+  const accountManagementItems = [
     { id: 'accounts', label: 'Accounts', icon: Users },
     { id: 'copy-trading', label: 'Copy Trading', icon: Copy },
     { id: 'trading-view', label: 'TradingView', icon: TrendingUp },
@@ -45,11 +48,33 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, setActiveItem }) => {
       </div>
 
       <nav className="flex-1 px-4">
+        {/* Dashboard Section */}
+        <div className="mb-6">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveItem(item.id)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                  activeItem === item.id
+                    ? 'bg-green-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                }`}
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm">{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Account Management Section */}
         <div className="mb-6">
           <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">
             Account Management
           </div>
-          {menuItems.map((item) => {
+          {accountManagementItems.map((item) => {
             const Icon = item.icon;
             return (
               <button
